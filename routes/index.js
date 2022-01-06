@@ -3,8 +3,14 @@ const path = require('path')
 var router = express.Router();
 var fs = require('fs');
 const { exec } = require('child_process');
+
 require('dotenv').config();
-/* GET home page. */
+
+const multer = require('multer');
+const upload = multer({
+    dest: path.resolve(`${process.env.UPLOADS}`),
+})
+
 router.get('/api/', function(req, res, next) {
     res.send({
         status: 200,
@@ -37,6 +43,13 @@ router.get('/api/v1/command', function(req, res, next) {
         status: 200,
         response: stdout
     }))
+});
+
+router.post('/api/v1/upload', upload.any(), function(req, res, next) {
+    res.send({
+        status: 200,
+        message: "File(s) uploaded successfully"
+    })
 });
 
 module.exports = router;
